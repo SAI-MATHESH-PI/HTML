@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local Community Event Portal</title>
+    <style>
+       
+        body { font-family: 'Times New Roman', Times, serif, sans-serif; margin: 20px ; }
+        #welcomeBanner { background-color: red; padding: 10px; }
+        .highlight { font-weight: bold; color: blue; }
+        .event-img { border: 2px solid #ccc; width: 450px; }
+        form { margin-top: 20px; }
+        video { width: 1250px; }
+        
+    </style>
+    <script>
+        
+        function validatePhone(input) {
+            const regex = /^\d{10}$/;
+            if (!regex.test(input.value)) {
+                alert("Enter a valid 10-digit phone number.");
+            }
+        }
+
+        function showFee() {
+            const fee = document.getElementById('eventType').value;
+            document.getElementById('feeDisplay').textContent = "Selected fee: " + fee;
+            localStorage.setItem("preferredEvent", fee);
+        }
+
+        function confirmSubmission() {
+            document.getElementById("formOutput").value = "Thank you for registering!";
+        }
+
+        function enlargeImage(img) {
+            img.style.width = "400px";
+        }
+
+        function charCount() {
+            const text = document.getElementById("feedback");
+            document.getElementById("charCount").textContent = text.value.length + " characters";
+        }
+
+        function videoReady() {
+            document.getElementById("videoStatus").textContent = "Video ready to play.";
+        }
+
+        function confirmExit(event) {
+            event.preventDefault();
+            event.returnValue = "You have unsaved changes.";
+        }
+
+        function loadPreferences() {
+            const saved = localStorage.getItem("preferredEvent");
+            if (saved) {
+                document.getElementById("eventType").value = saved;
+                showFee();
+            }
+        }
+
+        function clearPreferences() {
+            localStorage.clear();
+            sessionStorage.clear();
+            alert("Preferences cleared.");
+        }
+
+        function findLocation() {
+            const output = document.getElementById("locationOutput");
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        output.textContent = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+                    },
+                    error => {
+                        output.textContent = "Error getting location: " + error.message;
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            } else {
+                output.textContent = "Geolocation is not supported.";
+            }
+        }
+
+        window.onload = loadPreferences;
+        window.onbeforeunload = confirmExit;
+    </script>
+</head>
+<body>
+    
+
+    
+    <nav>
+        <a href="#home">Home</a> |
+        <a href="#events">Events</a> |
+        <a href="#contact">Contact</a> |
+        <a href="help.html" target="_blank">Help</a>
+    </nav>
+
+   
+    <div id="welcomeBanner">
+        <h1><center>Welcome to Your Local Community Event Portal!</center></h1>
+        <p class="highlight"><center>Check out our <span style="color:whitesmoke; font-weight:bold;">special offer</span> for new users!<div class="registration-container">
+  <form class="registration-form">
+    <h2>Register</h2>
+    <input type="text" placeholder="Full Name" required>
+    <input type="email" placeholder="Email Address" required>
+    <input type="password" placeholder="Password" required>
+    <button type="submit" class="cta-button">Submit</button>
+    <button type="button" onclick="clearPreferences()">Clear Preferences</button>
+    <button type="button" onclick="findLocation()">Select Location</button>
+  </form>
+</div>
+</center></p>
+    </div>
+    
+ 
+    <section id="events">
+        <h2>Community Events Gallery</h2>
+        <table>
+            <caption>Recent Community Moments</caption>
+            <tr>
+                <td><img src="Music.jpeg" alt="Concert" title="Music Concert" class="event-img" ondblclick="enlargeImage(this)"></td>
+                <td><img src="workshop.jpeg" alt="Workshop" title="Workshop" class="event-img" ondblclick="enlargeImage(this)"></td>
+                <td><img src="meeting.jpeg" alt="Concert" title="Meeting" class="event-img" ondblclick="enlargeImage(this)"></td>
+            </tr>
+            <tr>
+                <td><img src="clean.jpeg" alt="Clean-up" title="Clean-up" class="event-img" ondblclick="enlargeImage(this)"></td>
+                <td><img src="parade.jpeg" alt="Parade" title="Parade" class="event-img" ondblclick="enlargeImage(this)"></td>
+                <td><img src="festival.jpeg" alt="Festival" title="Festival" class="event-img" ondblclick="enlargeImage(this)"></td>
+            </tr>
+        </table>
+    </section>
+
+    
+    <section id="contact">
+        <h2>Register for an Event</h2>
+        <form onsubmit="confirmSubmission(); return false;">
+            <label>Name: <input type="text" name="name" placeholder="Your name" required autofocus></label><br><br>
+            <label>Email: <input type="email" name="email" placeholder="you@example.com" required></label><br><br>
+            <label>Date: <input type="date" name="date" required></label><br><br>
+            <label>Phone: <input type="text" name="phone" onblur="validatePhone(this)" required></label><br><br>
+            <label>Event Type:
+                <select id="eventType" onchange="showFee()">
+                    <option value="">--Select--</option>
+                    <option value="$10">Workshop</option>
+                    <option value="$25">Concert</option>
+                    <option value="$5">Meeting</option>
+                    <option value="$10">Clean-up</option>
+                    <option value="$20">Parade</option>
+                    <option value="$1">Festival</option>
+                </select>
+            </label><br>
+            <p id="feeDisplay"></p>
+            <br>
+            <label>Message:<br>
+                <textarea id="feedback" onkeyup="charCount()"></textarea>
+            </label><br>
+            <p id="charCount"></p>
+            <br>
+            <button type="submit" onclick="confirmSubmission()">Submit</button>
+            <br><br>
+            <output id="formOutput"></output>
+        </form>
+
+        <button onclick="clearPreferences()">Clear Preferences</button><br><br>
+
+        <button onclick="findLocation()">Find Nearby Events</button>
+        <p id="locationOutput"></p>
+    </section>
+
+    <section>
+        <h2>Watch Our Event Promo</h2>
+        <video controls oncanplay="videoReady()">
+            <source src="get together.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p id="videoStatus"></p>
+    </section>
+
+    <footer>
+        <p>Contact Us at community events-local@gmail.com </p>
+        <p>&copy; 2025 Local Community Event Portal</p>
+    </footer>
+    
+
+</body>
+</html>
