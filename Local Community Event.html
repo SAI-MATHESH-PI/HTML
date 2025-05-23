@@ -106,8 +106,6 @@
     <input type="email" placeholder="Email Address" required>
     <input type="password" placeholder="Password" required>
     <button type="submit" class="cta-button">Submit</button>
-    <button type="button" onclick="clearPreferences()">Clear Preferences</button>
-    <button type="button" onclick="findLocation()">Select Location</button>
   </form>
 </div>
 </center></p>
@@ -160,12 +158,13 @@
             <button type="submit" onclick="confirmSubmission()">Submit</button>
             <br><br>
             <output id="formOutput"></output>
-        </form>
-
-        <button onclick="clearPreferences()">Clear Preferences</button><br><br>
+            <button onclick="clearPreferences()">Clear Preferences</button><br><br>
 
         <button onclick="findLocation()">Find Nearby Events</button>
         <p id="locationOutput"></p>
+        </form>
+
+        
     </section>
 
     <section>
